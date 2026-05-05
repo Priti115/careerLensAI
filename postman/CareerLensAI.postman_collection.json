@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "CareerLensAI API",
+    "description": "Postman collection for testing the CareerLensAI FastAPI backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('API is healthy', function () {",
+              "  pm.response.to.have.status(200);",
+              "  pm.expect(pm.response.json().status).to.eql('ok');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analyze Resume Text",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resume\": \"John Doe\\nEmail john.doe@example.com\\nPhone +91 9876543210\\nSkills Python SQL Machine Learning Pandas Numpy Scikit-learn Tableau Flask Git Docker\\nExperience 3 years building dashboards, NLP models, classification systems, and FastAPI services.\\nProjects Built a customer churn model that improved reporting speed by 18 percent.\\nEducation B.Tech Computer Science\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/analyze/text",
+          "host": ["{{base_url}}"],
+          "path": ["analyze", "text"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Text analysis succeeds', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns top 3 predictions', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.top_predictions).to.be.an('array');",
+              "  pm.expect(body.top_predictions.length).to.be.at.most(3);",
+              "  pm.expect(body.resume_score.score).to.be.a('number');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analyze Resume PDF",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/analyze/resume",
+          "host": ["{{base_url}}"],
+          "path": ["analyze", "resume"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('PDF analysis succeeds', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns analysis JSON', function () {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.have.property('top_predictions');",
+              "  pm.expect(body).to.have.property('skill_gap');",
+              "  pm.expect(body).to.have.property('recommendations');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Career Chat",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What should I improve first for my top predicted role?\",\n  \"history\": [\n    {\"role\": \"user\", \"content\": \"Help me improve my resume.\"},\n    {\"role\": \"assistant\", \"content\": \"Sure. I will use your analysis to guide improvements.\"}\n  ],\n  \"analysis\": {\n    \"top_predictions\": [\n      {\"role\": \"Python Developer\", \"confidence\": 0.74}\n    ],\n    \"skill_gap\": {\n      \"missing_skills\": [\"fastapi\", \"git\", \"pytest\"]\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Chat succeeds', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns answer', function () {",
+              "  pm.expect(pm.response.json().answer).to.be.a('string');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

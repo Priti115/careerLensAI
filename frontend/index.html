@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CareerLensAI Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <div class="input-pane">
+          <div class="brand-row">
+            <div>
+              <p class="eyebrow">CareerLensAI</p>
+              <h1>Resume Analyzer</h1>
+            </div>
+            <span id="apiStatus" class="status-pill">Checking API</span>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Input mode">
+            <button class="tab active" id="textTab" type="button">Text</button>
+            <button class="tab" id="pdfTab" type="button">PDF</button>
+          </div>
+
+          <form id="analysisForm">
+            <div id="textPanel" class="panel active">
+              <label for="resumeText">Resume text</label>
+              <textarea id="resumeText" name="resumeText" spellcheck="false">John Doe
+Email john.doe@example.com
+Phone +91 9876543210
+Skills Python SQL Machine Learning Pandas Numpy Scikit-learn Tableau Flask Git Docker
+Experience 3 years building data science dashboards, classification models, NLP projects, and production APIs.
+Projects Customer churn prediction improved retention reporting by 18 percent. Resume parser API using FastAPI and ML models.
+Education B.Tech Computer Science</textarea>
+            </div>
+
+            <div id="pdfPanel" class="panel">
+              <label for="resumeFile">Resume PDF</label>
+              <input id="resumeFile" name="resumeFile" type="file" accept="application/pdf" />
+            </div>
+
+            <div class="actions">
+              <button id="analyzeBtn" type="submit">Analyze Resume</button>
+              <button id="sampleBtn" class="secondary" type="button">Use Sample</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="result-pane">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Analysis Output</p>
+              <h2 id="resultTitle">Ready</h2>
+            </div>
+            <span id="scoreBadge" class="score-badge">--</span>
+          </div>
+
+          <div id="emptyState" class="empty-state">
+            Submit resume text or upload a PDF to see predictions, score, gaps, and recommendations.
+          </div>
+
+          <div id="results" class="results hidden">
+            <section>
+              <h3>Top Roles</h3>
+              <div id="predictions" class="prediction-list"></div>
+            </section>
+
+            <section class="two-column">
+              <div>
+                <h3>Missing Skills</h3>
+                <div id="missingSkills" class="tag-list"></div>
+              </div>
+              <div>
+                <h3>Matched Skills</h3>
+                <div id="matchedSkills" class="tag-list"></div>
+              </div>
+            </section>
+
+            <section>
+              <h3>Resume Improvements</h3>
+              <ul id="recommendations"></ul>
+            </section>
+
+            <section>
+              <h3>Learning Resources</h3>
+              <div id="learningResources" class="resource-list"></div>
+            </section>
+
+            <section>
+              <h3>Parsed Resume</h3>
+              <pre id="parsedResume"></pre>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside id="chatWidget" class="chat-widget" aria-live="polite">
+      <button id="chatLauncher" class="chat-launcher" type="button" aria-label="Open AI career chatbot">
+        <span class="bot-face">AI</span>
+        <span class="launcher-text">Career Chat</span>
+      </button>
+
+      <section id="chatPanel" class="chat-panel hidden" aria-label="AI career chatbot">
+        <header class="chat-header">
+          <div>
+            <strong>CareerLens Assistant</strong>
+            <span id="chatContext">Analyze a resume to unlock tailored answers</span>
+          </div>
+          <button id="chatClose" class="icon-button" type="button" aria-label="Close chatbot">x</button>
+        </header>
+
+        <div id="chatMessages" class="chat-messages">
+          <div class="message assistant">
+            <p>Hi, I can help you improve this resume, explain predicted roles, and plan missing skills after analysis.</p>
+          </div>
+        </div>
+
+        <form id="chatForm" class="chat-form">
+          <input id="chatInput" type="text" placeholder="Ask about role fit, gaps, or resume improvements" autocomplete="off" />
+          <button id="chatSend" type="submit">Send</button>
+        </form>
+      </section>
+    </aside>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
