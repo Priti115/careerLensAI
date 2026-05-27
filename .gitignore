@@ -41,3 +41,6 @@ build/
 # Local generated API exports
 *.har
 *.postman_environment.json
+
+# Local presentation generation dependencies
+presentation_deps/

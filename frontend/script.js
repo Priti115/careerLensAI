@@ -62,18 +62,31 @@ function renderTags(targetId, items) {
 
 function renderPredictions(predictions) {
   const target = document.querySelector("#predictions");
+
   target.innerHTML = "";
+
   predictions.forEach((prediction, index) => {
-    const confidence = Math.round((prediction.confidence || 0) * 100);
+
+    const confidence = Number(
+      prediction.confidence || 0
+    ).toFixed(1);
+
     const row = document.createElement("div");
+
     row.className = "prediction";
+
     row.innerHTML = `
       <div>
         <strong>${index + 1}. ${prediction.role}</strong>
-        <div class="bar"><span style="width:${confidence}%"></span></div>
+
+        <div class="bar">
+          <span style="width:${confidence}%"></span>
+        </div>
       </div>
+
       <span>${confidence}%</span>
     `;
+
     target.appendChild(row);
   });
 }
